@@ -1,5 +1,6 @@
 package com.cooba.config;
 
+import com.cooba.enums.Role;
 import com.cooba.filter.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,7 +25,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
+    public static final String[] ALL_PERMIT_PATHS = {"/register"};
     @Autowired
     @Qualifier("handlerExceptionResolver")
     //https://www.baeldung.com/spring-security-exceptionhandler
@@ -36,7 +37,9 @@ public class SecurityConfig {
                 .csrf().disable()
                 .cors().disable()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/register").permitAll()
+                .antMatchers(ALL_PERMIT_PATHS).permitAll()
+                .antMatchers("/user").hasRole(Role.USER.name())
+                .antMatchers("/admin").hasRole(Role.ADMIN.name())
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement()
@@ -46,6 +49,7 @@ public class SecurityConfig {
                 .formLogin().disable()
                 .httpBasic(Customizer.withDefaults())
                 .exceptionHandling()
+                .accessDeniedHandler(accessDeniedHandler())
                 .authenticationEntryPoint((request, response, authException) -> resolver.resolveException(request, response, null, authException));
         return http.build();
     }
@@ -67,6 +71,7 @@ public class SecurityConfig {
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {
         return (request, response, accessDeniedException) -> {
+            accessDeniedException.printStackTrace();
             System.out.println(accessDeniedException.getMessage());
         };
     }

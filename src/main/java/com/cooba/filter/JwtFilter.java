@@ -20,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static com.cooba.config.SecurityConfig.ALL_PERMIT_PATHS;
+
 @Component
 public class JwtFilter extends OncePerRequestFilter {
     @Autowired
@@ -45,7 +47,10 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return request.getServletPath().startsWith("/register");
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        for (String permitPath : ALL_PERMIT_PATHS) {
+            if (request.getServletPath().startsWith(permitPath)) return true;
+        }
+        return false;
     }
 }

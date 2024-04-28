@@ -24,4 +24,14 @@ public class UserController {
     public ResponseEntity<String> hello() {
         return ResponseEntity.ok("Hello World!");
     }
+
+    @GetMapping("/user")
+    public ResponseEntity<String> forUser() {
+        return ResponseEntity.ok("This is for user api!");
+    }
+
+    @GetMapping("/admin")
+    public ResponseEntity<String> forAdmin() {
+        return ResponseEntity.ok("This is for admin api!");
+    }
 }

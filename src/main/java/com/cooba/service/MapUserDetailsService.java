@@ -6,6 +6,7 @@ import com.cooba.enums.Role;
 import com.cooba.request.RegisterRequest;
 import com.cooba.response.RegisterResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,10 +14,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 @Service
 public class MapUserDetailsService implements UserDetailsService {
     private final Map<String, UserEntity> userDetailsMap = new ConcurrentHashMap<>();
@@ -25,6 +28,19 @@ public class MapUserDetailsService implements UserDetailsService {
     @Autowired
     private TokenService tokenService;
 
+
+    @PostConstruct
+    public void initUser() {
+        UserEntity root = new UserEntity();
+        root.setUsername("root");
+        root.setPassword("root");
+        root.setAuthorities(List.of(new UserAuthority("root", Role.ADMIN)));
+        root.setEnabled(true);
+
+        userDetailsMap.put(root.getUsername(), root);
+        String token = tokenService.generateToken(root);
+        log.info("Root token: {}", token);
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
