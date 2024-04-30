@@ -18,6 +18,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -41,6 +42,8 @@ public class SecurityConfig {
                 .antMatchers(ALL_PERMIT_PATHS).permitAll()
                 .antMatchers("/user").hasRole(Role.USER.name())
                 .antMatchers("/admin").hasRole(Role.ADMIN.name())
+                .antMatchers("/create").hasAuthority(Authority.CREATE.name())
+                .antMatchers("/update").hasAuthority(Authority.UPDATE.name())
                 .antMatchers("/special").hasAuthority(Authority.SPECIAL.name())
                 .anyRequest().authenticated()
                 .and()
@@ -52,7 +55,7 @@ public class SecurityConfig {
                 .httpBasic(Customizer.withDefaults())
                 .exceptionHandling()
                 .accessDeniedHandler(accessDeniedHandler())
-                .authenticationEntryPoint((request, response, authException) -> resolver.resolveException(request, response, null, authException));
+                .authenticationEntryPoint(authenticationEntryPoint());
         return http.build();
     }
 
@@ -74,7 +77,15 @@ public class SecurityConfig {
     public AccessDeniedHandler accessDeniedHandler() {
         return (request, response, accessDeniedException) -> {
             accessDeniedException.printStackTrace();
-            System.out.println(accessDeniedException.getMessage());
+            resolver.resolveException(request, response, null, accessDeniedException);
+        };
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return (request, response, authException) -> {
+            authException.printStackTrace();
+            resolver.resolveException(request, response, null, authException);
         };
     }
 }

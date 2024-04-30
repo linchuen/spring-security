@@ -8,8 +8,8 @@ import static com.cooba.enums.Authority.*;
 
 @Getter
 public enum Role {
-    USER("role_user",List.of(CREATE, SELECT)),
-    ADMIN("role_admin",List.of(CREATE, SELECT, UPDATE, DELETE));
+    USER("ROLE_USER",List.of(CREATE, SELECT)),
+    ADMIN("ROLE_ADMIN",List.of(CREATE, SELECT, UPDATE, DELETE));
 
     private final String type;
     private final List<Authority> authorities;
