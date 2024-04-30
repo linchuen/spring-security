@@ -21,11 +21,7 @@ class TokenServiceTest {
 
     @Test
     void generateToken() {
-        UserEntity root = new UserEntity();
-        root.setUsername("root");
-        root.setPassword("root");
-        root.setAuthorities(List.of(new UserAuthority("root", Role.ADMIN)));
-        root.setEnabled(true);
+        UserEntity root = new UserEntity("root","root",Role.ADMIN,true);
 
         String token = tokenService.generateToken(root);
         Assertions.assertNotNull(token);

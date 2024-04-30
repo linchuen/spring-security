@@ -1,5 +1,6 @@
 package com.cooba.config;
 
+import com.cooba.enums.Authority;
 import com.cooba.enums.Role;
 import com.cooba.filter.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,7 @@ public class SecurityConfig {
                 .antMatchers(ALL_PERMIT_PATHS).permitAll()
                 .antMatchers("/user").hasRole(Role.USER.name())
                 .antMatchers("/admin").hasRole(Role.ADMIN.name())
+                .antMatchers("/special").hasAuthority(Authority.SPECIAL.name())
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement()

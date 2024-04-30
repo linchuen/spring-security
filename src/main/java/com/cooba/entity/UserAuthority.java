@@ -1,21 +1,20 @@
 package com.cooba.entity;
 
-import com.cooba.enums.Role;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 
 @Getter
 public class UserAuthority implements GrantedAuthority {
     private final String username;
-    private final Role role;
+    private final String authority;
 
-    public UserAuthority(String username, Role role) {
+    public UserAuthority(String username, String authority) {
         this.username = username;
-        this.role = role;
+        this.authority = authority;
     }
 
     @Override
     public String getAuthority() {
-        return "ROLE_" + role.name();
+        return authority;
     }
 }

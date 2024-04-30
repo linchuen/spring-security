@@ -34,4 +34,19 @@ public class UserController {
     public ResponseEntity<String> forAdmin() {
         return ResponseEntity.ok("This is for admin api!");
     }
+
+    @GetMapping("/create")
+    public ResponseEntity<String> create() {
+        return ResponseEntity.ok("This is create authority api!");
+    }
+
+    @GetMapping("/update")
+    public ResponseEntity<String> update() {
+        return ResponseEntity.ok("This is update authority api!");
+    }
+
+    @GetMapping("/special")
+    public ResponseEntity<String> special() {
+        return ResponseEntity.ok("This is special api!");
+    }
 }
