@@ -34,7 +34,10 @@ public class SecurityConfig {
     private HandlerExceptionResolver resolver;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtFilter jwtFilter, AccessDeniedHandler deniedHandler) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,
+                                                   JwtFilter jwtFilter,
+                                                   AccessDeniedHandler accessDeniedHandler,
+                                                   AuthenticationEntryPoint authenticationEntryPoint) throws Exception {
         http
                 .csrf().disable()
                 .cors().disable()
@@ -54,8 +57,8 @@ public class SecurityConfig {
                 .formLogin().disable()
                 .httpBasic(Customizer.withDefaults())
                 .exceptionHandling()
-                .accessDeniedHandler(accessDeniedHandler())
-                .authenticationEntryPoint(authenticationEntryPoint());
+                .accessDeniedHandler(accessDeniedHandler)
+                .authenticationEntryPoint(authenticationEntryPoint);
         return http.build();
     }
 
